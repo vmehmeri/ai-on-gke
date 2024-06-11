@@ -89,7 +89,7 @@ p.context {
 }
 
 p.context::before {
-    content: 'Response: ';
+    content: 'Context: ';
     font-weight: bold;
 }
 

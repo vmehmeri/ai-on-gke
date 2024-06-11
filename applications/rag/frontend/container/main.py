@@ -24,7 +24,7 @@ from langchain.prompts import PromptTemplate
 from rai import dlp_filter # Google's Cloud Data Loss Prevention (DLP) API. https://cloud.google.com/security/products/dlp
 from rai import nlp_filter # https://cloud.google.com/natural-language/docs/moderating-text
 from cloud_sql import cloud_sql
-import sqlalchemy
+
 
 # Setup logging
 logging_client = logging.Client()
