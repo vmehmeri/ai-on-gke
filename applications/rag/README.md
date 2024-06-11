@@ -96,8 +96,8 @@ gcloud container clusters get-credentials ${CLUSTER_NAME} --location=${CLUSTER_L
    
    ``` bucket_name = PROJECT_ID ``` 
 
-4. Generate vector embeddings: Run all the cells in the notebook to generate vector embeddings for the Netflix shows dataset (https://www.kaggle.com/datasets/shivamb/netflix-shows) and store them in the `pgvector` CloudSQL instance via a Ray job.
-    * When the last cell says the job has succeeded (eg: `Job 'raysubmit_APungAw6TyB55qxk' succeeded`), the vector embeddings have been generated and we can launch the frontend chat interface. Note that running the job can take up to 10 minutes.
+4. Generate vector embeddings: Run all the cells in the notebook to generate vector embeddings for documents and store them in the `pgvector` CloudSQL instance via a Ray job.
+    * When the last cell says the job has succeeded, the vector embeddings have been generated and we can launch the frontend chat interface. Note that running the job can take up to 10 minutes.
     * Ray may take several minutes to create the runtime environment. During this time, the job will appear to be missing (e.g. `Status message: PENDING`).
     * (Optional) Connect to the Ray dashboard to check the job status or logs:
           - `kubectl port-forward -n ${NAMESPACE} service/ray-cluster-kuberay-head-svc 8265:8265`
