@@ -21,6 +21,15 @@ Install the following on your computer:
 * [Helm](https://helm.sh/docs/intro/install/)
 * [Gcloud](https://cloud.google.com/sdk/docs/install)
 
+### Set up gcloud
+Run the following in your computer:
+
+```
+export PROJECT_ID=<YOUR_PROJECT_ID>
+gcloud application-default auth login
+gcloud config set project $PROJECT_ID
+``` 
+
 # Installation
 
 This section sets up the RAG infrastructure in your GCP project using Terraform.
@@ -29,7 +38,7 @@ This section sets up the RAG infrastructure in your GCP project using Terraform.
 
 1. `cd ai-on-gke/applications/rag`
 
-2. Edit `workloads.tfvars` to set your project ID, location, and cluster name. 
+2. Edit `workloads.tfvars` to set your project ID and optionally the location and cluster name. 
 
 3. Generate a [Hugging Face User Access Token](https://huggingface.co/settings/tokens) and set the environment variable: `export TF_VAR_hf_token=YOUR_ACCESS_TOKEN`
    
@@ -37,7 +46,8 @@ This section sets up the RAG infrastructure in your GCP project using Terraform.
 
 5. Run `terraform init`
 
-6. Run `terraform apply --var-file workloads.tfvars`
+6. Run `terraform apply --var-file workloads.tfvars --auto-approve`
+
 
 # Upload some data
 First, upload some PDFs to your [Cloud Storage bucket](https://console.cloud.google.com/storage/browser). The bucket should have the same name as your project ID.
@@ -45,6 +55,10 @@ First, upload some PDFs to your [Cloud Storage bucket](https://console.cloud.goo
 Here's a suggestion:
 * [Alphabet's 10k financial report](https://abc.xyz/assets/43/44/675b83d7455885c4615d848d52a4/goog-10-k-2023.pdf)
 
+To upload it, run:
+```
+curl https://abc.xyz/assets/43/44/675b83d7455885c4615d848d52a4/goog-10-k-2023.pdf -o goog-10k-2023.pdf && gsutil cp goog-10k-2023.pdf gs://$PROJECT_ID/
+```
 
 # Run the Notebook to generate vector embeddings for the dataset
 
@@ -55,7 +69,7 @@ Set your the namespace, cluster name and location from `workloads.tfvars`):
 ```
 export NAMESPACE=ai-on-gke
 export CLUSTER_LOCATION=us-central1
-export CLUSTER_NAME=ai-dev-cluster-01
+export CLUSTER_NAME=ai-dev-cluster
 ```
 
 Note: confirm that these values match what's in `workloads.tfvars`.

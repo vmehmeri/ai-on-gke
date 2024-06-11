@@ -91,10 +91,6 @@ variable "create_gcs_bucket" {
   description = "Enable flag to create gcs_bucket"
 }
 
-variable "gcs_bucket" {
-  type        = string
-  description = "Bucket name to store the dataset"
-}
 
 variable "dataset_embeddings_table_name" {
   type        = string
