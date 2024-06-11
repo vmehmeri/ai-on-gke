@@ -42,6 +42,9 @@ function onReady() {
         promptEl.textContent = prompt;
         chatEl.appendChild(promptEl);
 
+        var contextEl = Object.assign(document.createElement("p"), {classList: ["context"]});
+        chatEl.appendChild(contextEl);
+
         var responseEl = Object.assign(document.createElement("p"), {classList: ["response"]});
         chatEl.appendChild(responseEl);
         chatEl.scrollTop = chatEl.scrollHeight; // Scroll to bottom
@@ -76,11 +79,13 @@ function onReady() {
             }
             return response.json();
         }).then(data => {
+            var context = data.context
             var content = data.response.text
             if (data.response.warnings && data.response.warnings.length > 0) {
                 responseEl.classList.replace("response", "warning");
                 content += "\n\nWarning: " + data.response.warnings.join("\n") + "\n"
             }
+            contextEl.textContent = context;
             responseEl.textContent = content;
         }).catch(err => {
             responseEl.classList.replace("response", "error");

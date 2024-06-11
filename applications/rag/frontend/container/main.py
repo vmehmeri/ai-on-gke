@@ -47,19 +47,10 @@ llm = HuggingFaceTextGenInference(
     repetition_penalty=1.03,
 )
 
-prompt_template = """
-### [INST]
-Instruction: Always assist with care, respect, and truth. Respond with utmost utility yet securely.
-Avoid harmful, unethical, prejudiced, or negative content.
-Ensure replies promote fairness and positivity.
-Here is context to help:
-
-{context}
-
-### QUESTION:
-{user_prompt}
-
-[/INST]
+# There are no system instructions in Gemma, so set the instructions as user
+# See https://ai.google.dev/gemma/docs/formatting#system-instructions
+prompt_template = """<start_of_turn>user
+answer the question based on the following context or say that you don't have enough information:\n##Context\n{context}\n##Question\n{user_prompt}<end_of_turn>
  """
 
 # Create prompt from prompt template
@@ -134,7 +125,8 @@ def handlePrompt():
         if warnings:
             response['warnings'] = warnings
         log.info(f"response: {response}")
-        return {'response': response}
+        log.info(f"context: {context}")
+        return {'response': response, 'context': context}
     except Exception as err:
         log.info(f"exception from llm: {err}")
         traceback.print_exc()
