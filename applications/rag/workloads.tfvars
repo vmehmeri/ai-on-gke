@@ -12,24 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-project_id      = "<your project ID>"
+project_id      = "YOUR_PROJECT_ID"
 create_network  = true         # Creates a new VPC for your cluster. Disable to use an existing network.
 network_name    = "ml-network" # Creates a network named ml-network by default. If using an existing VPC, ensure you follow the README instructions to enable Private Service Connect for your VPC.
 subnetwork_cidr = "10.100.0.0/16"
 
 create_cluster    = true # Creates a GKE cluster in the specified network.
-cluster_name      = "<cluster-name>"
+cluster_name      = "ai-dev-cluster"
 cluster_location  = "us-central1"
 autopilot_cluster = true
 private_cluster   = false
 
 ## GKE environment variables
 kubernetes_namespace = "ai-on-gke"
+kubernetes_version = "1.29.4"
 
-# The bucket name must be globally unique (across all of Google Cloud).
-# To verify, check that `gcloud storage buckets describe gs://<bucketname>` returns a 404.
+
+# The bucket name will be the same as the project_id to guarantee global uniqueness
 create_gcs_bucket = true
-gcs_bucket        = "rag-data-<username>"
 
 # Ensure the instance name is unique to your project.
 cloudsql_instance = "pgvector-instance"

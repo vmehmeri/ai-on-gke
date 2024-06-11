@@ -21,9 +21,9 @@ locals {
 
 resource "kubernetes_service" "inference_service" {
   metadata {
-    name = "mistral-7b-instruct-service"
+    name = "gemma-2b-it-service"
     labels = {
-      app = "mistral-7b-instruct"
+      app = "gemma-2b-it"
     }
     namespace = var.namespace
     annotations = {
@@ -33,7 +33,7 @@ resource "kubernetes_service" "inference_service" {
   }
   spec {
     selector = {
-      app = "mistral-7b-instruct"
+      app = "gemma-2b-it"
     }
     session_affinity = "ClientIP"
     port {
@@ -51,46 +51,56 @@ resource "kubernetes_deployment" "inference_deployment" {
     create = "30m"
   }
   metadata {
-    name      = "mistral-7b-instruct"
+    name      = "gemma-2b-it"
     namespace = var.namespace
     labels = merge({
-      app = "mistral-7b-instruct"
+      app = "gema-2b-it"
+
     }, local.additional_labels)
   }
 
   spec {
     # It takes more than 10m for the deployment to be ready on Autopilot cluster
-    # Set the progress deadline to 30m to avoid the deployment controller
+    # Set the progress deadline to 60m to avoid the deployment controller
     # considering the deployment to be failed
-    progress_deadline_seconds = 1800
+    progress_deadline_seconds = 3600
     replicas                  = 1
 
     selector {
       match_labels = merge({
-        app = "mistral-7b-instruct"
+        app = "gemma-2b-it"
       }, local.additional_labels)
     }
 
     template {
       metadata {
         labels = merge({
-          app = "mistral-7b-instruct"
+          app = "gemma-2b-it"
         }, local.additional_labels)
       }
 
       spec {
-        init_container {
-          name    = "download-model"
-          image   = "google/cloud-sdk:473.0.0-alpine"
-          command = ["gsutil", "cp", "-r", "gs://vertex-model-garden-public-us/mistralai/Mistral-7B-Instruct-v0.1/", "/model-data/"]
-          volume_mount {
-            mount_path = "/model-data"
-            name       = "model-storage"
-          }
-        }
+
+        #init_container {
+        #  name  = "download-extract-models"
+        #  image = "google/cloud-sdk:473.0.0-alpine"
+        #  command = ["/bin/sh", "-c"]
+        #  args = [
+        #    "gsutil cp -r gs://vertex-model-garden-public-us/gemma.tar.gz /model-data/ && tar -xzvf /model-data/gemma.tar.gz -C /model-data/"
+        #  ]
+        #  volume_mount {
+        #    mount_path = "/model-data"
+        #    name       = "model-storage"
+        #  }
+        #}
+
+        
+
+        
+
         container {
-          image = "ghcr.io/huggingface/text-generation-inference:1.1.0"
-          name  = "mistral-7b-instruct"
+          image = "us-docker.pkg.dev/vertex-ai/vertex-vision-model-garden-dockers/pytorch-hf-tgi-serve:20240220_0936_RC01"
+          name  = "gemma-2b-it"
 
           port {
             name           = "metrics"
@@ -100,14 +110,29 @@ resource "kubernetes_deployment" "inference_deployment" {
 
           args = ["--model-id", "$(MODEL_ID)"]
 
+          #env {
+          #  name  = "MODEL_ID"
+          #  value = "/model/gemma/gemma-2b-it"
+          #}
+
           env {
             name  = "MODEL_ID"
-            value = "/model/Mistral-7B-Instruct-v0.1"
+            value = "google/gemma-1.1-2b-it"
+          }
+
+          #env {
+          #  name  = "NUM_SHARD"
+          #  value = "1"
+          #}
+
+          env {
+            name  = "SHARDED"
+            value = "false"
           }
 
           env {
-            name  = "NUM_SHARD"
-            value = "2"
+            name  = "HUGGING_FACE_HUB_TOKEN"
+            value = var.hf_token
           }
 
           env {
@@ -117,12 +142,12 @@ resource "kubernetes_deployment" "inference_deployment" {
 
           resources {
             limits = {
-              "nvidia.com/gpu" = "2"
+              "nvidia.com/gpu" = "1"
             }
             requests = {
-              # Sufficient storage to fit the Mistral-7B-Instruct-v0.1 model
-              "ephemeral-storage" = "20Gi"
-              "nvidia.com/gpu"    = "2"
+                
+              "ephemeral-storage" = "50Gi"
+              "nvidia.com/gpu"    = "1"
             }
           }
 

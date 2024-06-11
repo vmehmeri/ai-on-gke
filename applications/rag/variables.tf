@@ -334,6 +334,12 @@ variable "cloudsql_instance_region" {
   default     = ""
 }
 
+variable "hf_token" {
+  type = string
+  description = "Hugging Face Access token"
+  sensitive   = true
+}
+
 variable "cpu_pools" {
   type = list(object({
     name                   = string

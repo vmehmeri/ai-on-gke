@@ -28,3 +28,8 @@ variable "additional_labels" {
 variable "autopilot_cluster" {
   type = bool
 }
+
+variable "hf_token" {
+  type = string
+  sensitive   = true
+}

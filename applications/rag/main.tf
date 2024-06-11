@@ -168,7 +168,7 @@ module "gcs" {
   source      = "../../modules/gcs"
   count       = var.create_gcs_bucket ? 1 : 0
   project_id  = var.project_id
-  bucket_name = var.gcs_bucket
+  bucket_name = var.project_id
 }
 
 module "cloudsql" {
@@ -187,7 +187,7 @@ module "jupyterhub" {
   providers         = { helm = helm.rag, kubernetes = kubernetes.rag }
   namespace         = local.kubernetes_namespace
   project_id        = var.project_id
-  gcs_bucket        = var.gcs_bucket
+  gcs_bucket        = var.project_id
   add_auth          = var.jupyter_add_auth
   additional_labels = var.additional_labels
 
@@ -231,7 +231,7 @@ module "kuberay-cluster" {
   project_id             = var.project_id
   namespace              = local.kubernetes_namespace
   enable_gpu             = true
-  gcs_bucket             = var.gcs_bucket
+  gcs_bucket             = var.project_id
   autopilot_cluster      = local.enable_autopilot
   db_secret_name         = module.cloudsql.db_secret_name
   cloudsql_instance_name = local.cloudsql_instance
@@ -277,6 +277,7 @@ module "inference-server" {
   namespace         = local.kubernetes_namespace
   additional_labels = var.additional_labels
   autopilot_cluster = local.enable_autopilot
+  hf_token          = var.hf_token
   depends_on        = [module.namespace]
 }
 
