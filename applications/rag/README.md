@@ -111,6 +111,11 @@ gcloud container clusters get-credentials ${CLUSTER_NAME} --location=${CLUSTER_L
    
 2. Prompt the LLM
     * Start chatting! This will fetch context related to your prompt from the vector embeddings in the `pgvector` CloudSQL instance, augment the original prompt with the context & query the inference model (`gemma-2b-it`) with the augmented prompt.
+    * If you're using the sample document provided (Alphabet's 10k financial report - 2023), here are some prompts to try:
+      * How does Google make money?
+      * When did Google's AI journey begin?
+      * How is Alphabet leveraging Gemini?
+      * What did Larry and Sergey write in the original founders' letter?
 
 
 # Cleanup
