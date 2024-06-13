@@ -26,7 +26,7 @@ Run the following in your computer:
 
 ```
 export PROJECT_ID=<YOUR_PROJECT_ID>
-gcloud application-default auth login
+gcloud auth application-default login
 gcloud config set project $PROJECT_ID
 ``` 
 
