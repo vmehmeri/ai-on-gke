@@ -110,6 +110,7 @@ resource "kubernetes_deployment" "rag_frontend_deployment" {
         service_account_name = var.google_service_account
         container {
           #image = "us-central1-docker.pkg.dev/ai-on-gke/rag-on-gke/frontend@sha256:d65b538742ee29826ee629cfe05c0008e7c09ce5357ddc08ea2eaf3fd6cefe4b"
+          #image = "us-central1-docker.pkg.dev/ai-on-gke/rag-on-gke/gemma-frontend:latest"
           image = "us-central1-docker.pkg.dev/ai-dev-2024/ai-dev/gemma-frontend:latest"
           name  = "rag-frontend"
 

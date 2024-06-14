@@ -81,20 +81,19 @@ gcloud container clusters get-credentials ${CLUSTER_NAME} --location=${CLUSTER_L
 ```
 
 1. Connect and login to JupyterHub:
-     - Port forward to the JupyterHub service: `kubectl port-forward service/proxy-public -n ${NAMESPACE} 8081:80 &`
-     - Go to `localhost:8081` in a browser
-     - Login with these credentials:
-         * username: admin
-         * password: use `terraform output jupyterhub_password` to fetch the password value
-   
+    - Find the external IP address of the JupyterHub proxy service: `kubectl get services proxy-public -n $NAMESPACE`
+    - In a new browser tab, type in the URL the IP address you see under `EXTERNAL-IP`. Do not use HTTPS.
+    - Login with these credentials:
+       * username: admin
+       * password: use `terraform output jupyterhub_password` to fetch the password value
 
 2. Load the notebook:
-    - Once logged in to JupyterHub, choose the `CPU` preset with `Default` storage. 
-    - Click [File] -> [Open From URL] and paste: `https://raw.githubusercontent.com/vmehmeri/ai-on-gke/main/applications/rag/example_notebooks/rag-ray-sql-interactive.ipynb`
+   - Once logged in to JupyterHub, if asked, choose the `CPU` preset with `Default` storage.
+   - Click [File] -> [Open From URL] and paste: `https://raw.githubusercontent.com/vmehmeri/ai-on-gke/main/applications/rag/example_notebooks/rag-ray-sql-interactive.ipynb`
 
 3. Set the `bucket_name` variable to match your `project_id`:
    
-   ``` bucket_name = PROJECT_ID ``` 
+   ``` bucket_name = YOUR_PROJECT_ID ``` 
 
 4. Generate vector embeddings: Run all the cells in the notebook to generate vector embeddings for documents and store them in the `pgvector` CloudSQL instance via a Ray job.
     * When the last cell says the job has succeeded, the vector embeddings have been generated and we can launch the frontend chat interface. Note that running the job can take up to 10 minutes.
