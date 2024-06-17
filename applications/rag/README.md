@@ -28,6 +28,7 @@ Run the following in your computer:
 export PROJECT_ID=<YOUR_PROJECT_ID>
 gcloud auth application-default login
 gcloud config set project $PROJECT_ID
+gcloud auth application-default set-quota-project $PROJECT_ID
 ``` 
 
 # Installation
@@ -46,7 +47,7 @@ This section sets up the RAG infrastructure in your GCP project using Terraform.
 
 5. Run `terraform init`
 
-6. Run `terraform apply --var-file workloads.tfvars --auto-approve`
+6. Run `terraform apply --var-file workloads.tfvars --auto-approve`. Note: if you're running this on Cloud Shell, you may be prompted to authorize Cloud Shell to access your credentials. If that happens, select **Authorize.**
 
 
 # Upload some data
