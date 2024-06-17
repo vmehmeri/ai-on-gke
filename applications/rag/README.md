@@ -42,7 +42,7 @@ This section sets up the RAG infrastructure in your GCP project using Terraform.
 
 3. Generate a [Hugging Face User Access Token](https://huggingface.co/settings/tokens) and set the environment variable: `export TF_VAR_hf_token=YOUR_ACCESS_TOKEN`
    
-4. Go to the [model card](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1) in Hugging Face and click "Agree and access repository"
+4. Go to the [model card](https://huggingface.co/google/gemma-2b-it) in Hugging Face and click "Agree and access repository"
 
 5. Run `terraform init`
 
