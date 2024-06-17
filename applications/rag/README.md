@@ -88,6 +88,10 @@ gcloud container clusters get-credentials ${CLUSTER_NAME} --location=${CLUSTER_L
        * username: admin
        * password: use `terraform output jupyterhub_password` to fetch the password value
 
+**Note:** If you see the error **"XSRF cookie does not match POST argument"**, clear up cookies and try again. To do so in Chrome, go to [chrome://settings/cookies](chrome://settings/cookies), click on **See all site data and permissions**, find the URL corresponding to the external IP address of your Jupyter service, and delete the related cookies as shown in the following screenshot:
+
+![](cookies-delete-screenshot.jpg)
+
 2. Load the notebook:
    - Once logged in to JupyterHub, if asked, choose the `CPU` preset with `Default` storage.
    - Click [File] -> [Open From URL] and paste: `https://raw.githubusercontent.com/vmehmeri/ai-on-gke/main/applications/rag/example_notebooks/rag-ray-sql-interactive.ipynb`
@@ -102,20 +106,22 @@ gcloud container clusters get-credentials ${CLUSTER_NAME} --location=${CLUSTER_L
     * (Optional) Connect to the Ray dashboard to check the job status or logs:
           - `kubectl port-forward -n ${NAMESPACE} service/ray-cluster-kuberay-head-svc 8265:8265`
           - Go to `localhost:8265` in a browser
+  
+Note: if you see Unschedulable Pods issue when running the notebook cell that runs Ray workers, try stopping and re-running the code cell. If it still doesn't work, it could be a stockout or quota issue related to GPUs in the region.
         
 # Launch the frontend chat interface
 
 1. Connect to the frontend:
      - Port forward to the frontend service: `kubectl port-forward service/rag-frontend -n ${NAMESPACE} 8080:8080 &`
-     - Go to `localhost:8080` in a browser
+     - Go to `localhost:8080` in a browser. If you're running this on Cloud Shell, click on the Web Preview icon (top-right corner of the Shell pane) and then **Preview on port 8080**.
    
 2. Prompt the LLM
     * Start chatting! This will fetch context related to your prompt from the vector embeddings in the `pgvector` CloudSQL instance, augment the original prompt with the context & query the inference model (`gemma-2b-it`) with the augmented prompt.
     * If you're using the sample document provided (Alphabet's 10k financial report - 2023), here are some prompts to try:
-      * How does Google make money?
+      * What do Paid clicks represent?
       * When did Google's AI journey begin?
       * How is Alphabet leveraging Gemini?
-      * What did Larry and Sergey write in the original founders' letter?
+
 
 
 # Cleanup
