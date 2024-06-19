@@ -29,6 +29,7 @@ export PROJECT_ID=<YOUR_PROJECT_ID>
 gcloud auth application-default login
 gcloud config set project $PROJECT_ID
 gcloud auth application-default set-quota-project $PROJECT_ID
+gcloud services enable cloudresourcemanager.googleapis.com serviceusage.googleapis.com
 ``` 
 
 # Installation
